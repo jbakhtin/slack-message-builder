@@ -1,0 +1,20 @@
+{
+    "name": "jbakhtin/slack-message-builder",
+    "description": "Package for building slack message blocks.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jurij Bakhtin",
+            "email": "jurij.bakhtin@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "7.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jbakhtin\\SlackMessageBuilder\\": "src/"
+        }
+    }
+}
