@@ -21,6 +21,14 @@ class MessageBuilder {
         return $this;
     }
 
+    /**
+     * @return MessageBuilder
+     */
+    public function setBlock(Block $block) : MessageBuilder
+    {
+
+    }
+
     /** Get final message
      *
      * @return \Jbakhtin\SlackMessageBuilder\Message
