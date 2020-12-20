@@ -2,28 +2,55 @@
 
 namespace Jbakhtin\SlackMessageBuilder;
 
+use GuzzleHttp\Client as Guzzle;
 use Jbakhtin\SlackMessageBuilder\Blocks\Block;
 
 class Message {
     //TODO: need replaceto private
     public $text;
+    public $token;
+    public $channel;
+
     public $blocks;
 
-    public function __construct()
-    {
-        $this->text = "Slack\n";
-    }
+    public $guzzle;
 
-    function send() : array
+    public function __construct() {
+		$this->guzzle = new Guzzle();
+	}
+
+	/** Send message
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 * @throws \GuzzleHttp\Exception\GuzzleException
+	 */
+	function send()
     {
-        $response = [
-            'success' => 'ok',
-            'payload' => "Hello, World!"
-        ];
+		$response = $this->guzzle->post("https://slack.com/api/chat.postMessage", ['form_params' => get_object_vars($this)]);
 
         return $response;
     }
 
+	/** Set token
+	 *
+	 * Authentication token define work space where will be sand message.
+	 *
+	 * How it will be look:
+	 *  {
+	 *      "token": "token"
+	 *      "text": ...,
+	 *      "blocks": ...,
+	 *      ...
+	 *  }
+	 *
+	 * @param string $token
+	 * @return $this
+	 */
+	public function setToken(string $token) : Message
+	{
+		$this->token = $token;
+		return $this;
+	}
 
     /** Set text
      *
@@ -43,33 +70,33 @@ class Message {
      */
     public function setText(string $text) : Message
     {
-        $this->text .=  "$text\n";
+        $this->text = $text;
         return $this;
     }
 
-    /** Set block
-     *
-     * This field responsible for set any blocks to "blocks" field
-     *
-     * How it will be look:
-     *  {
-     *      "token": "..."
-     *      "text": "...",
-     *      "blocks": [
-     *          {
-     *              "type":"section",
-     *              "text": {
-     *                  "type": "mrkdwn",
-     *                  "text": "Jurij Bakhtin sat text block with type 'mark down'"
-     *              }
-     *          }
-     *      ],
-     *      ...
-     *  }
-     *
-     * @param string $text
-     * @return $this
-     */
+	/** Set block
+	 *
+	 * This field responsible for set any blocks to "blocks" field
+	 *
+	 * How it will be look:
+	 *  {
+	 *      "token": "..."
+	 *      "text": "...",
+	 *      "blocks": [
+	 *          {
+	 *              "type":"section",
+	 *              "text": {
+	 *                  "type": "mrkdwn",
+	 *                  "text": "Jurij Bakhtin sat text block with type 'mark down'"
+	 *              }
+	 *          }
+	 *      ],
+	 *      ...
+	 *  }
+	 *
+	 * @param Block $block
+	 * @return $this
+	 */
     public function setBlock(Block $block) : Message
     {
         $this->blocks[] = $block;
