@@ -4,44 +4,19 @@ namespace Jbakhtin\SlackMessageBuilder;
 
 use GuzzleHttp\Client as Guzzle;
 use Jbakhtin\SlackMessageBuilder\Blocks\Block;
+use Psr\Http\Message\ResponseInterface;
 
 class Message {
     //TODO: need replaceto private
-    public $text;
-    public $token;
-    public $channel;
+    private $text;
+    private $token;
+    private $channel;
 
-    public $blocks;
-
-    public $guzzle;
-
-    public function __construct() {
-		$this->guzzle = new Guzzle();
-	}
-
-	/** Send message
-	 *
-	 * @return \Psr\Http\Message\StreamInterface
-	 * @throws \GuzzleHttp\Exception\GuzzleException
-	 */
-	function send()
-    {
-		$response = $this->guzzle->post("https://slack.com/api/chat.postMessage", ['form_params' => get_object_vars($this)]);
-
-        return $response;
-    }
+    private $blocks;
 
 	/** Set token
 	 *
 	 * Authentication token define work space where will be sand message.
-	 *
-	 * How it will be look:
-	 *  {
-	 *      "token": "token"
-	 *      "text": ...,
-	 *      "blocks": ...,
-	 *      ...
-	 *  }
 	 *
 	 * @param string $token
 	 * @return $this
@@ -57,14 +32,6 @@ class Message {
      * This field responsible for display text on popup.
      * Also, if "blocks" field is empty, then text will be displayed as main message.
      *
-     * How it will be look:
-     *  {
-     *      "token": "..."
-     *      "text": "Hello, World!",
-     *      "blocks": [{...}],
-     *      ...
-     *  }
-     *
      * @param string $text
      * @return $this
      */
@@ -78,22 +45,6 @@ class Message {
 	 *
 	 * This field responsible for set any blocks to "blocks" field
 	 *
-	 * How it will be look:
-	 *  {
-	 *      "token": "..."
-	 *      "text": "...",
-	 *      "blocks": [
-	 *          {
-	 *              "type":"section",
-	 *              "text": {
-	 *                  "type": "mrkdwn",
-	 *                  "text": "Jurij Bakhtin sat text block with type 'mark down'"
-	 *              }
-	 *          }
-	 *      ],
-	 *      ...
-	 *  }
-	 *
 	 * @param Block $block
 	 * @return $this
 	 */
@@ -103,8 +54,27 @@ class Message {
         return $this;
     }
 
+    /** Set channel name/id
+     *
+     * This field responsible for set channel by name or id
+     *
+     * @param string $channel
+     * @return $this
+     */
+    public function setChannel(string $channel) : Message
+    {
+        $this->channel = $channel;
+        return $this;
+    }
+
     function getArray() : array
     {
-        return get_defined_vars($this);
+        $attributes = get_object_vars($this);
+
+        foreach($attributes as $key => $attribute) {
+            if (is_null($attribute)) unset($attributes[$key]);
+        }
+
+        return $attributes;
     }
 }
