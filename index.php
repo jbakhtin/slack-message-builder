@@ -3,23 +3,29 @@
 @include "vendor/autoload.php";
 
 use GuzzleHttp\Client as Guzzle;
+use Jbakhtin\SlackMessageBuilder\Blocks\SectionBlock;
 use Jbakhtin\SlackMessageBuilder\Message;
-use Jbakhtin\SlackMessageBuilder\Blocks\Block;
+use Jbakhtin\SlackMessageBuilder\Pisces\Text;
 
 $message = new Message();
 try {
     $message->setText("Hello, World!")
-        ->setToken('xoxb-1257257834017-1254207437045-Ky167BJLhFHWOYw5NurEARYy')
+        ->setToken('xoxb-1257257834017-1254207437045-iZqQgI50fjt2Io1SeIkuazn7')
         ->setChannel('#general');
 } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-    return $e->getMessage();
+	echo json_encode($message->toArray());
+	return;
 }
 
-//$block = new Block();
+$text = new Text("Hello, Block!");
 
-//$message->setBlock($block);
+$block = new SectionBlock($text);
+
+$message->setBlock($block);
 
 $client = new \Jbakhtin\SlackMessageBuilder\Client($message);
 
 $response = $client->send();
+
+echo json_encode($message->toArray());
 

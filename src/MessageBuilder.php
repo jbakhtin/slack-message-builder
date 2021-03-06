@@ -2,6 +2,7 @@
 
 namespace Jbakhtin\SlackMessageBuilder;
 
+use Jbakhtin\SlackMessageBuilder\Blocks\Block;
 use Jbakhtin\SlackMessageBuilder\Message;
 
 class MessageBuilder {
@@ -21,12 +22,14 @@ class MessageBuilder {
         return $this;
     }
 
-    /**
-     * @return MessageBuilder
-     */
+	/**
+	 * @param Block $block
+	 * @return MessageBuilder
+	 */
     public function setBlock(Block $block) : MessageBuilder
     {
-
+		$this->message->setBlock($block);
+		return $this;
     }
 
     /** Get final message

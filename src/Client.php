@@ -17,6 +17,12 @@ class Client
     }
 
     public function send() {
-        return $this->guzzle->post("https://slack.com/api/chat.postMessage", ['form_params' => $this->message->getArray()]);
+        return $this->guzzle->post("https://slack.com/api/chat.postMessage", [
+        	'body' => json_encode($this->message->toArray(), JSON_UNESCAPED_UNICODE),
+        	'headers' => [
+				'Content-Type' => 'application/json;charset=UTF-8',
+				'Authorization' => 'Bearer xoxb-1257257834017-1254207437045-iZqQgI50fjt2Io1SeIkuazn7'
+			]
+		]);
     }
 }

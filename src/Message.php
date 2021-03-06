@@ -50,7 +50,7 @@ class Message {
 	 */
     public function setBlock(Block $block) : Message
     {
-        $this->blocks[] = $block;
+        $this->blocks[] = $block->toArray();
         return $this;
     }
 
@@ -67,7 +67,7 @@ class Message {
         return $this;
     }
 
-    function getArray() : array
+    function toArray() : array
     {
         $attributes = get_object_vars($this);
 
